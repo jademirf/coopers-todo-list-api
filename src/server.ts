@@ -1,11 +1,11 @@
 import Fastify from 'fastify'
 import fastifyEnv from '@fastify/env'
 import cors from '@fastify/cors'
-import jwt from '@fastify/jwt'
 import routes from './routes'
 import swagger from "@fastify/swagger";
 import { withRefResolver } from "fastify-zod";
 import { version } from "../package.json";
+import { JWT, SignOptions } from '@fastify/jwt';
 
 
 const schema = {
@@ -13,10 +13,20 @@ const schema = {
   required: [ 'PORT', 'JWT_SECRET_KEY' ],
   properties: {
     PORT: {
-      type: 'string',
-      default: 3000
+      type: 'number',
+      default: 3000,
     },
     JWT_SECRET_KEY: { type: 'string' }
+  }
+}
+
+declare module 'fastify' {
+  export interface FastifyRequest {
+    jwt: JWT;
+  }
+  export interface FastifyInstance {
+    authenticate: any;
+    secret: SignOptions;
   }
 }
 
@@ -40,12 +50,14 @@ function bootstrap() {
     origin: true,
   })
 
-  server.register(jwt, {
-    secret: process.env.JWT_SECRET_KEY
+  
+  server.get('/check', async () => {
+    return { message: 'It works!' }
   })
 
-  server.get('/check', async () => {
-    return { message: 'It works!'}
+  server.addHook('preHandler', (request, reply, next) => {
+    request.jwt = server.jwt
+    return next()
   })
 
   routes(server)
@@ -59,19 +71,12 @@ function bootstrap() {
       openapi: {
         info: {
           title: "Fastify API",
-          description: "API for some products",
+          description: "Todo list API",
           version,
         },
       },
     })
   );
-
-  // server.listen({ port: server.config.PORT || 3000, host: '0.0.0.0' }, (err: Error) => {
-  //   if (err) {
-  //     server.log.error(err)
-  //     process.exit(1)
-  //   }
-  // })
 
   return server
 

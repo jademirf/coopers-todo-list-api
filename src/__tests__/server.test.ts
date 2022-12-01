@@ -14,4 +14,5 @@ test('request the `/check` route', async (t) => {
   })
 
   t.equal(response.statusCode, 200)
+  t.same(response.json(), { message: 'It works!' })
 })
