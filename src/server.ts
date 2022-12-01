@@ -3,7 +3,9 @@ import fastifyEnv from '@fastify/env'
 import cors from '@fastify/cors'
 import jwt from '@fastify/jwt'
 import routes from './routes'
-import { FastifyInstance } from 'fastify'
+import swagger from "@fastify/swagger";
+import { withRefResolver } from "fastify-zod";
+import { version } from "../package.json";
 
 
 const schema = {
@@ -18,8 +20,8 @@ const schema = {
   }
 }
 
-async function bootstrap() {
-  const fastify = Fastify({
+function bootstrap() {
+  const server = Fastify({
     logger: {
       level: 'info',
       transport: {
@@ -28,35 +30,51 @@ async function bootstrap() {
     }
   })
   
-  await fastify.register(fastifyEnv, {
+  server.register(fastifyEnv, {
     dotenv: true, // will read .env in root folder
     confKey: 'config',
     schema: schema,
   })
 
-  await fastify.register(cors, {
+  server.register(cors, {
     origin: true,
   })
 
-  await fastify.register(jwt, {
-    secret: fastify.config.JWT_SECRET_KEY
+  server.register(jwt, {
+    secret: process.env.JWT_SECRET_KEY
   })
 
-  fastify.get('/', async () => {
+  server.get('/check', async () => {
     return { message: 'It works!'}
   })
 
-  routes(fastify)
+  routes(server)
 
-  fastify.listen({ port: fastify.config.PORT || 3000, host: '0.0.0.0' }, (err: Error) => {
-    if (err) {
-      fastify.log.error(err)
-      process.exit(1)
-    }
-  })
+  server.register(
+    swagger,
+    withRefResolver({
+      routePrefix: "/docs",
+      exposeRoute: true,
+      staticCSP: true,
+      openapi: {
+        info: {
+          title: "Fastify API",
+          description: "API for some products",
+          version,
+        },
+      },
+    })
+  );
+
+  // server.listen({ port: server.config.PORT || 3000, host: '0.0.0.0' }, (err: Error) => {
+  //   if (err) {
+  //     server.log.error(err)
+  //     process.exit(1)
+  //   }
+  // })
+
+  return server
 
 }
-
-bootstrap()
 
 export default bootstrap
