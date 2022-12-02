@@ -18,4 +18,7 @@ export async function itemRoutes(fastify: FastifyInstance) {
   fastify.delete('/items/:id', {
     onRequest: [authenticate],
   }, Item.list)
+  fastify.delete('/items/list/:listId', {
+    onRequest: [authenticate],
+  }, Item.deleteAll)
 }

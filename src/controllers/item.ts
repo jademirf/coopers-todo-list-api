@@ -23,7 +23,7 @@ const create = async (request: FastifyRequest, response: FastifyReply) => {
     })
     response.status(201).send(listItem)
   } catch (err) {
-    console.log('🚀 ~ file: list.controller.ts ~ line 22 ~ create ~ err', err)
+    console.log("🚀 ~ file: item.ts:26 ~ create ~ err", err)
     response.status(400).send(err)
   }
 
@@ -78,6 +78,48 @@ const update = async (request: FastifyRequest, response: FastifyReply) => {
     })
     response.status(204)
   } catch (err) {
+    console.log("🚀 ~ file: item.ts:81 ~ update ~ err", err)
+    response.status(400).send(err)
+  }
+
+}
+
+const deleteOne = async (request: FastifyRequest, response: FastifyReply) => {
+  const getListItemParams = z.object({
+    id: z.string(),
+  })
+
+  const {id} = getListItemParams.parse(request.params)
+
+  try {
+    await prisma.listItem.delete({
+      where: {
+        id
+      }
+    })
+    response.status(204)
+  } catch (err) {
+    console.log("🚀 ~ file: item.ts:102 ~ deleteOne ~ err", err)
+    response.status(400).send(err)
+  }
+
+}
+
+const deleteAll = async (request: FastifyRequest, response: FastifyReply) => {
+  const getListItemParams = z.object({
+    listId: z.string(),
+  })
+
+  const {listId} = getListItemParams.parse(request.params)
+
+  try {
+    await prisma.listItem.deleteMany({
+      where: {
+        listId
+      }
+    })
+    response.status(204)
+  } catch (err) {
     console.log("🚀 ~ file: list.ts:62 ~ update ~ err", err)
     response.status(400).send(err)
   }
@@ -86,6 +128,8 @@ const update = async (request: FastifyRequest, response: FastifyReply) => {
 
 export {
   create,
+  deleteOne,
+  deleteAll,
   list,
   update,
 }
