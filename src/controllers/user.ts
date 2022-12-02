@@ -34,6 +34,7 @@ const create = async (request: FastifyRequest, response: FastifyReply) => {
 const list = async (request: FastifyRequest, response: FastifyReply) => {
   const users = await prisma.user.findMany({
     select: {
+      id: true,
       email: true,
       lists: true,
     }
