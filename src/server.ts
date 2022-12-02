@@ -2,10 +2,9 @@ import Fastify from 'fastify'
 import fastifyEnv from '@fastify/env'
 import cors from '@fastify/cors'
 import routes from './routes'
-import swagger from "@fastify/swagger";
-import { withRefResolver } from "fastify-zod";
-import { version } from "../package.json";
 import { JWT, SignOptions } from '@fastify/jwt';
+import jwt from '@fastify/jwt'
+
 
 
 const schema = {
@@ -31,6 +30,8 @@ declare module 'fastify' {
 }
 
 function bootstrap() {
+  const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY || 'klsjadloipuo234-12k3l12oiu342ll'
+
   const server = Fastify({
     logger: {
       level: 'info',
@@ -55,28 +56,16 @@ function bootstrap() {
     return { message: 'It works!' }
   })
 
+  server.register(jwt, {
+    secret: JWT_SECRET_KEY
+  })
+
   server.addHook('preHandler', (request, reply, next) => {
     request.jwt = server.jwt
     return next()
   })
 
   routes(server)
-
-  server.register(
-    swagger,
-    withRefResolver({
-      routePrefix: "/docs",
-      exposeRoute: true,
-      staticCSP: true,
-      openapi: {
-        info: {
-          title: "Fastify API",
-          description: "Todo list API",
-          version,
-        },
-      },
-    })
-  );
 
   return server
 

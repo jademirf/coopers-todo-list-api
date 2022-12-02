@@ -2,6 +2,7 @@ import { test } from 'tap'
 import bootstrap from '../server'
 
 test('request the `/check` route', async (t) => {
+  t.plan(2)
   const fastify = bootstrap()
 
   t.teardown(() => {
