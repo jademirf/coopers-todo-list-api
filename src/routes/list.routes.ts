@@ -14,5 +14,8 @@ export async function listRoutes(fastify: FastifyInstance) {
   }, List.list)
   fastify.get('/lists/:id', {
     onRequest: [authenticate],
-  }, List.list)
+  }, List.show)
+  fastify.delete('/lists/:id', {
+    onRequest: [authenticate],
+  }, List.remove)
 }

@@ -9,13 +9,13 @@ export async function itemRoutes(fastify: FastifyInstance) {
   fastify.patch('/items/:id', {
     onRequest: [authenticate],
   }, Item.update)
-  fastify.get('/items/list/:listId', {
+  fastify.get('/items/lists/:listId', {
     onRequest: [authenticate],
   }, Item.list)
   fastify.delete('/items/:id', {
     onRequest: [authenticate],
   }, Item.deleteOne)
-  fastify.delete('/items/list/:listId', {
+  fastify.delete('/items/lists/:listId', {
     onRequest: [authenticate],
   }, Item.deleteAll)
 }
