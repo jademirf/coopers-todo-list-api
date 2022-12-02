@@ -7,5 +7,11 @@ export async function userRoutes(fastify: FastifyInstance) {
   fastify.get('/users', User.list)
   fastify.get('/users/:id', {
     onRequest: [authenticate],
-  }, User.list)
+  }, User.show)
+  fastify.patch('/users/:id', {
+    onRequest: [authenticate],
+  }, User.update)
+  fastify.delete('/users/:id', {
+    onRequest: [authenticate],
+  }, User.remove)
 }
