@@ -43,7 +43,22 @@ const list = async (request: FastifyRequest, response: FastifyReply) => {
   return users
 }
 
+const show = async (request: FastifyRequest, response: FastifyReply) => {
+  const getUserParams = z.object({
+    id: z.string(),
+  })
+
+  const {id} = getUserParams.parse(request.params)
+
+  const user = await prisma.user.findUnique({
+    where: {id}
+  })
+
+  response.send(user)
+}
+
 export {
   create,
   list,
+  show,
 }
