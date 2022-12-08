@@ -1,5 +1,9 @@
 build/
 node_modules/
 .nyc_output/
+my-micro/
+index.js
+prog_info
+state
 
 .env
