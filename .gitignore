@@ -1,9 +1,9 @@
 build/
 node_modules/
 .nyc_output/
-my-micro/
+coopers-micro/
 index.js
 prog_info
-state
+state 
 
 .env
