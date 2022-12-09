@@ -5,8 +5,8 @@ import bootstrap from "./server";
 const server = bootstrap();
 
 async function main() {
-  let PORT = 3333 
-  PORT = process.env.PORT ? parseInt(process.env.PORT) : 3333
+  let PORT = 3002 
+  PORT = process.env.PORT ? parseInt(process.env.PORT) : 3002
 
   try {
     server.listen({
