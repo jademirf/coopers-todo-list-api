@@ -13,7 +13,7 @@ const schema = {
   properties: {
     PORT: {
       type: 'number',
-      default: 3002,
+      default: 3333,
     },
     JWT_SECRET_KEY: { type: 'string' }
   }

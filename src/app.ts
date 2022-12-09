@@ -6,7 +6,7 @@ const server = bootstrap();
 
 async function main() {
   let PORT = 3333 
-  PORT = process.env.PORT ? parseInt(process.env.PORT) : 3000
+  PORT = process.env.PORT ? parseInt(process.env.PORT) : 3333
 
   try {
     server.listen({
